@@ -42,10 +42,18 @@ angular.module('ui.select2', []).value('uiSelect2Config', {}).directive('uiSelec
           if (opts.simple_tags) {
             model = [];
             angular.forEach(select2_data, function(value, index) {
-              model.push(value.id);
+              if(opts.convertToAngularFunc && (typeof (opts.convertToAngularFunc) === 'function')) {
+                model.push(opts.convertToAngularFunc.call(this, value));
+              } else {
+                model.push(value.id);
+              }
             });
           } else {
-            model = select2_data;
+            if(opts.convertToAngularFunc && (typeof (opts.convertToAngularFunc) === 'function')) {
+              model = opts.convertToAngularFunc.call(this, select2_data);
+            } else {
+              model = select2_data;
+            }
           }
           return model;
         };
